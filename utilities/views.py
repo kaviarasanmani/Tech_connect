@@ -1,7 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 import requests
+import os
 import json
+
+api_key = os.environ.get('API_KEY')
 
 class SearchAPIView(APIView):
     def get(self, request):
@@ -19,6 +22,8 @@ class SearchAPIView(APIView):
             "hl": "en",
             "gl": "in",
             "num": "60",
+            "api_key": api_key
+    
         }
 
         # Make the API request
