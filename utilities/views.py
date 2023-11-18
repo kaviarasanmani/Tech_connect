@@ -36,3 +36,30 @@ class SearchAPIView(APIView):
             return Response(data)
         else:
             return Response({"error": f"Error: {response.status_code}, {response.text}"})
+
+
+
+class ProductAPIView(APIView):
+    def get(self, request):
+        product_id = request.GET.get('q','')
+        api_url = "https://www.searchapi.io/api/v1/search"
+        
+        params = {
+             "engine": "google_product",
+             "product_id": product_id,
+             "api_key": api_key,
+             "google_domain": "google.co.in",
+             "gl": "in",
+
+        }
+        # Make the API request
+        response = requests.get(api_url, params=params)
+
+        # Check if the request was successful (status code 200)
+        if response.status_code == 200:
+            # Parse the JSON response
+            data = response.json()
+            return Response(data)
+        else:
+            return Response({"error": f"Error: {response.status_code}, {response.text}"})
+
