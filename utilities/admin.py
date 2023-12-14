@@ -1,39 +1,19 @@
-# # from django.contrib import admin
-
-# # # Register your models here.
-# # from .models import *
-
-# # admin.site.register(Product)
-# # admin.site.register(ProductImage)
-# # admin.site.register(ProductReview)
-# # admin.site.register(ProductSpecification)
-# # admin.site.register(ProductVariant)
-
-
-# # # admin.site.register(Category)
-# # # admin.site.register(Subcategory)
-# # # admin.site.register(Brand)
-# # # # admin.site.register(Variant)
-
-
-
-# # admin.py
-
 # from django.contrib import admin
-# from .models import Category, Brand, Specification, Product, ProductSpecification, ProductImage, ProductReview, ProductVariant
+# from import_export.admin import ImportExportModelAdmin
+# from .models import Category, Brand, Specification, Product, ProductSpecification, ProductImage, ProductReview, ProductVariant,RecentStory,Videos,Competitor
 
 
-# class CategoryAdmin(admin.ModelAdmin):
+# class CategoryAdmin(ImportExportModelAdmin):
 #     list_display = ['name', 'slug']
 #     prepopulated_fields = {'slug': ('name',)}
 
 
-# class BrandAdmin(admin.ModelAdmin):
+# class BrandAdmin(ImportExportModelAdmin):
 #     list_display = ['name', 'slug', 'description', 'website']
 #     prepopulated_fields = {'slug': ('name',)}
 
 
-# class SpecificationAdmin(admin.ModelAdmin):
+# class SpecificationAdmin(ImportExportModelAdmin):
 #     list_display = ['name', 'unit']
 
 
@@ -57,7 +37,7 @@
 #     extra = 1
 
 
-# class ProductAdmin(admin.ModelAdmin):
+# class ProductAdmin(ImportExportModelAdmin):
 #     list_display = ['name', 'category', 'brand', 'model', 'price', 'availability']
 #     list_filter = ['category', 'brand', 'availability']
 #     search_fields = ['name', 'model']
@@ -68,24 +48,34 @@
 # admin.site.register(Brand, BrandAdmin)
 # admin.site.register(Specification, SpecificationAdmin)
 # admin.site.register(Product, ProductAdmin)
+# admin.site.register(RecentStory)
+# admin.site.register(Videos)
+# admin.site.register(Competitor)
+
 
 
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
-from .models import Category, Brand, Specification, Product, ProductSpecification, ProductImage, ProductReview, ProductVariant,RecentStory
+from .models import Category, Brand, Specification, Product, ProductSpecification, ProductImage, ProductReview, ProductVariant, RecentStory, Videos, Competitor
 
 
-class CategoryAdmin(ImportExportModelAdmin):
+class BaseModelAdmin(ImportExportModelAdmin):
+    pass
+
+
+class CategoryAdmin(BaseModelAdmin):
     list_display = ['name', 'slug']
     prepopulated_fields = {'slug': ('name',)}
 
 
-class BrandAdmin(ImportExportModelAdmin):
+@admin.register(Brand)
+class BrandAdmin(BaseModelAdmin):
     list_display = ['name', 'slug', 'description', 'website']
     prepopulated_fields = {'slug': ('name',)}
 
 
-class SpecificationAdmin(ImportExportModelAdmin):
+@admin.register(Specification)
+class SpecificationAdmin(BaseModelAdmin):
     list_display = ['name', 'unit']
 
 
@@ -109,16 +99,40 @@ class ProductVariantInline(admin.TabularInline):
     extra = 1
 
 
-class ProductAdmin(ImportExportModelAdmin):
+class RecentStoryInline(admin.TabularInline):
+    model = RecentStory
+    extra = 1
+
+
+class VideosInline(admin.TabularInline):
+    model = Videos
+    extra = 1
+
+
+class CompetitorInline(admin.TabularInline):
+    model = Competitor
+    extra = 1
+
+
+@admin.register(Product)
+class ProductAdmin(BaseModelAdmin):
     list_display = ['name', 'category', 'brand', 'model', 'price', 'availability']
     list_filter = ['category', 'brand', 'availability']
     search_fields = ['name', 'model']
-    inlines = [ProductSpecificationInline, ProductImageInline, ProductReviewInline, ProductVariantInline]
+    inlines = [ProductSpecificationInline, ProductImageInline, ProductReviewInline, ProductVariantInline, RecentStoryInline, VideosInline, CompetitorInline]
 
 
-admin.site.register(Category, CategoryAdmin)
-admin.site.register(Brand, BrandAdmin)
-admin.site.register(Specification, SpecificationAdmin)
-admin.site.register(Product, ProductAdmin)
-admin.site.register(RecentStory)
+@admin.register(RecentStory)
+class RecentStoryAdmin(BaseModelAdmin):
+    pass
+
+
+@admin.register(Videos)
+class VideosAdmin(BaseModelAdmin):
+    pass
+
+
+@admin.register(Competitor)
+class CompetitorAdmin(BaseModelAdmin):
+    pass
 
